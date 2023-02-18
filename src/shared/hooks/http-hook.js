@@ -16,7 +16,7 @@ export const useHttpClient = () => {
 				res = await fetch(url, {
 					method,
 					body,
-					mode: "cors",
+					mode: "no-cors",
 					headers,
 					signal: httpAbortCtrl.signal,
 				});
