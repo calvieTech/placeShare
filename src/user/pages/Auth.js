@@ -65,8 +65,8 @@ const Auth = () => {
 		const inputs = formState.inputs;
 		let res;
 		const url = isLoginMode
-			? `http://${window.location.hostname}:3001/api/users/login`
-			: `http://${window.location.hostname}:3001/api/users/signup`;
+			? `https://${window.location.hostname}:3001/api/users/login`
+			: `https://${window.location.hostname}:3001/api/users/signup`;
 
 		if (isLoginMode) {
 			try {

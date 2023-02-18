@@ -9,7 +9,7 @@ import { redirect } from "react-router-dom";
 const Users = () => {
 	const [loadedUsers, setLoadedUsers] = useState(null);
 	const { error, isLoading, sendRequest, clearError } = useHttpClient();
-	const url = `http://${window.location.hostname}:3001/api/users`;
+	const url = `https://${window.location.hostname}:3001/api/users`;
 	let usersData;
 
 	useEffect(() => {
