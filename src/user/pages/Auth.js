@@ -65,8 +65,8 @@ const Auth = () => {
 		const inputs = formState.inputs;
 		let res;
 		const url = isLoginMode
-			? "http://localhost:3001/api/users/login"
-			: "http://localhost:3001/api/users/signup";
+			? `http://${window.location.hostname}:3001/api/users/login`
+			: `http://${window.location.hostname}:3001/api/users/signup`;
 
 		if (isLoginMode) {
 			try {
@@ -99,7 +99,7 @@ const Auth = () => {
 				throw new Error(err.message);
 			}
 		}
-		redirect("/", {replace: true});
+		redirect("/", { replace: true });
 	};
 
 	return (
