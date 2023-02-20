@@ -51,6 +51,7 @@ const App = () => {
 		routes = (
 			<Routes>
 				<Route path="/" exact element={<Users />} />
+				<Route path="/kiki" exact element={<TestComponent />} />
 				<Route path="/:userId/places" exact element={<UserPlaces />} />
 				<Route path="/auth" element={<Auth />} />
 			</Routes>
