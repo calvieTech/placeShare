@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
 	BrowserRouter as Router,
 	Routes,
@@ -13,6 +13,17 @@ import UpdatePlace from "./places/pages/UpdatePlace";
 import Auth from "./user/pages/Auth";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
+
+const TestComponent = () => {
+	useEffect(() => {
+		fetch('https://calvietech.com:3000/test')
+			.then(res => res.json())
+			.then(data => console.log('FETCHING /TEST: data', data))
+			.catch(err => console.log('ERROR FETCHING TEST:', err));
+	}, [])
+
+	return <div>HELLO</div>
+}
 
 const App = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,6 +41,7 @@ const App = () => {
 		routes = (
 			<Routes>
 				<Route path="/" exact element={<Users />} />
+				<Route path="/kiki" exact element={<TestComponent />} />
 				<Route path="/:userId/places" exact element={<UserPlaces />} />
 				<Route path="/places/new" exact element={<NewPlace />} />
 				<Route path="/places/:placeId" exact element={<UpdatePlace />} />
