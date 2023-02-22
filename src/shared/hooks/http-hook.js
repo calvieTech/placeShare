@@ -22,6 +22,7 @@ export const useHttpClient = () => {
 				});
 
 				resData = await res.json();
+				console.log('\n[DEBUG] resData:', resData);
 
 				activeHttpRequests.current = activeHttpRequests.current.filter(
 					(reqCtrl) => reqCtrl !== httpAbortCtrl

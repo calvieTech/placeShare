@@ -16,6 +16,8 @@ const Users = () => {
 		const fetchUsers = async (url) => {
 			try {
 				usersData = await sendRequest(url);
+				console.log('\n[DEBUG] usersData:', usersData);
+
 				if (!usersData.ok) {
 					throw new Error(usersData.message);
 				}
