@@ -11,16 +11,16 @@ import {
 import { useForm } from "../../shared/hooks/form-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import "./Auth.css";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Auth = () => {
 	const auth = useContext(AuthContext);
-	const [isLoginMode, setIsLoginMode] = useState(true);
+	const navigate = useNavigate();
+	const [isLoginMode, setIsLoginMode] = useState(false);
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
-	const redirect = useNavigate();
 
 	const [formState, inputHandler, setFormData] = useForm(
 		{
@@ -64,13 +64,14 @@ const Auth = () => {
 		event.preventDefault();
 		const inputs = formState.inputs;
 		let res;
-		const url = isLoginMode
-			? `https://${window.location.hostname}:3001/api/users/login`
-			: `https://${window.location.hostname}:3001/api/users/signup`;
+
+		let url = isLoginMode
+			? "http://localhost:3001/api/users/login"
+			: "http://localhost:3001/api/users/signup";
 
 		if (isLoginMode) {
 			try {
-				await sendRequest(
+				res = await sendRequest(
 					url,
 					"POST",
 					JSON.stringify({
@@ -79,13 +80,14 @@ const Auth = () => {
 					}),
 					{ "Content-Type": "application/json" }
 				);
+				auth.login(res.user.id);
+				navigate("/", { replace: true });
 			} catch (err) {
 				throw new Error(err.message);
 			}
-			auth.login();
 		} else {
 			try {
-				await sendRequest(
+				res = await sendRequest(
 					url,
 					"POST",
 					JSON.stringify({
@@ -95,11 +97,13 @@ const Auth = () => {
 					}),
 					{ "Content-Type": "application/json" }
 				);
+				auth.login(res.user.id);
+				navigate("/", { replace: true });
 			} catch (err) {
+				setIsLoading(false);
 				throw new Error(err.message);
 			}
 		}
-		redirect("/", { replace: true });
 	};
 
 	return (
@@ -107,22 +111,22 @@ const Auth = () => {
 			<ErrorModal error={error} onClear={clearError} />
 			<Card className="authentication">
 				{isLoading && <LoadingSpinner asOverlay />}
-				<h2>Login Required</h2>
+				{isLoginMode ? <h2>Login Required</h2> : <h2> Registration Required</h2>}
 				<hr />
 				<form onSubmit={authSubmitHandler}>
 					{!isLoginMode && (
 						<Input
-							element="input"
+							element="username"
 							id="name"
 							type="text"
-							label="Your Name"
+							label="Your Username"
 							validators={[VALIDATOR_REQUIRE()]}
-							errorText="Please enter a name."
+							errorText="Please enter a username."
 							onInput={inputHandler}
 						/>
 					)}
 					<Input
-						element="input"
+						element="email"
 						id="email"
 						type="email"
 						label="E-Mail"
@@ -131,12 +135,12 @@ const Auth = () => {
 						onInput={inputHandler}
 					/>
 					<Input
-						element="input"
+						element="password"
 						id="password"
 						type="password"
 						label="Password"
-						validators={[VALIDATOR_MINLENGTH(5)]}
-						errorText="Please enter a valid password, at least 5 characters."
+						validators={[VALIDATOR_MINLENGTH(6)]}
+						errorText="Please enter a valid password, at least 6 characters."
 						onInput={inputHandler}
 					/>
 					<Button type="submit" disabled={!formState.isValid}>

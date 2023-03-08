@@ -8,6 +8,8 @@ const config = {
 	output: {
 		path: path.resolve(__dirname, "dist"),
 		filename: "bundle.js",
+		assetModuleFilename: "images/[name][ext]",
+		clean: true,
 	},
 	module: {
 		rules: [
@@ -33,9 +35,16 @@ const config = {
 						},
 					},
 				],
-				include: /\.module\.css$/,
+				include: /\.module\.css$/i,
+			},
+			{
+				test: /\.(png|svg|jpg|jpeg|gif)/,
+				type: "asset/resource",
 			},
 		],
+	},
+	devServer: {
+		static: "./",
 	},
 	plugins: [
 		new HtmlWebpackPlugin({

@@ -6,42 +6,84 @@ export const useHttpClient = () => {
 
 	let activeHttpRequests = useRef([]);
 
-	const sendRequest = useCallback(
-		async (url, method = "GET", body = null, headers = {}, mode = "cors") => {
-			let res, resData;
+	let sendRequest = useCallback(
+		async (
+			url,
+			method = "GET",
+			body = null,
+			headers = { "Content-Type": "application/json" },
+			mode = "cors"
+		) => {
+			let resData;
 			const httpAbortCtrl = new AbortController();
 			activeHttpRequests.current.push(httpAbortCtrl);
 			setIsLoading(true);
+
 			try {
-				res = await fetch(url, {
+				const res = await fetch(url, {
 					method,
 					body,
-					mode: "no-cors",
 					headers,
+					mode,
 					signal: httpAbortCtrl.signal,
 				});
 
 				resData = await res.json();
-				console.log('\n[DEBUG] resData:', resData);
-
 				activeHttpRequests.current = activeHttpRequests.current.filter(
 					(reqCtrl) => reqCtrl !== httpAbortCtrl
 				);
 
 				if (!res.ok) {
-					setError(err.message);
 					throw new Error(resData.message);
 				}
+				setIsLoading(false);
+				return resData;
 			} catch (err) {
 				setError(err.message);
 				setIsLoading(false);
 				throw err;
 			}
-			setIsLoading(false);
-			return resData;
 		},
 		[]
 	);
+
+	// const sendRequest = useCallback(
+	// 	async (url, method = "GET", body = null, headers = {}, mode = "cors") => {
+	// 		let resData;
+	// 		const httpAbortCtrl = new AbortController();
+	// 		activeHttpRequests.current.push(httpAbortCtrl);
+	// 		setIsLoading(true);
+	// 		try {
+	// 			const res = await fetch(url, {
+	// 				method,
+	// 				body,
+	// 				headers,
+	// 				signal: httpAbortCtrl.signal,
+	// 			});
+
+	// 			resData = await res.json();
+	// 			console.log("\n[DEBUG] resData:", resData);
+
+	// 			activeHttpRequests.current = activeHttpRequests.current.filter(
+	// 				(reqCtrl) => reqCtrl !== httpAbortCtrl
+	// 			);
+
+	// 			console.log("\n[DEBUG]2 resData:", resData);
+
+	// 			if (!res.ok) {
+	// 				setError(err.message);
+	// 				throw new Error(resData.message);
+	// 			}
+	// 		} catch (err) {
+	// 			setError(err.message);
+	// 			setIsLoading(false);
+	// 			throw err;
+	// 		}
+	// 		setIsLoading(false);
+	// 		return resData;
+	// 	},
+	// 	[]
+	// );
 
 	const clearError = () => {
 		setError(null);

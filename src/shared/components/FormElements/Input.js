@@ -50,34 +50,108 @@ const Input = (props) => {
 		});
 	};
 
-	const element =
-		props.element === "input" ? (
-			<input
-				id={props.id}
-				type={props.type}
-				placeholder={props.placeholder}
-				onChange={changeHandler}
-				onBlur={touchHandler}
-				value={inputState.value}
-			/>
-		) : (
-			<textarea
-				id={props.id}
-				rows={props.rows || 3}
-				onChange={changeHandler}
-				onBlur={touchHandler}
-				value={inputState.value}
-			/>
-		);
+	// const element =
+	// 	props.element === "input" ? (
+	// 		<input
+	// 			title={props.title}
+	// 			id={props.id}
+	// 			type={props.type}
+	// 			placeholder={props.placeholder}
+	// 			onChange={changeHandler}
+	// 			onBlur={touchHandler}
+	// 			value={inputState.value}
+	// 		/>
+	// 	) : (
+	// 		<textarea
+	// 			title={props.title}
+	// 			id={props.id}
+	// 			rows={props.rows || 3}
+	// 			onChange={changeHandler}
+	// 			onBlur={touchHandler}
+	// 			value={inputState.value}
+	// 		/>
+	// 	);
+
+	let element = () => {
+		switch (props.element) {
+			case "username":
+				return (
+					<>
+						<input
+							title={props.title}
+							type={props.type}
+							placeholder={props.placeholder}
+							onChange={changeHandler}
+							onBlur={touchHandler}
+							value={inputState.value}
+							autoComplete="username"
+						/>
+					</>
+				);
+			case "email":
+				return (
+					<>
+						<input
+							title={props.title}
+							type={props.type}
+							placeholder={props.placeholder}
+							onChange={changeHandler}
+							onBlur={touchHandler}
+							value={inputState.value}
+							autoComplete="email"
+						/>
+					</>
+				);
+			case "password":
+				return (
+					<>
+						<input
+							title={props.title}
+							type={props.type}
+							placeholder={props.placeholder}
+							onChange={changeHandler}
+							onBlur={touchHandler}
+							value={inputState.value}
+							autoComplete="current-password"
+						/>
+					</>
+				);
+			case "input":
+				return (
+					<>
+						<input
+							title={props.title}
+							id={props.id}
+							type={props.type}
+							placeholder={props.placeholder}
+							onChange={changeHandler}
+							onBlur={touchHandler}
+							value={inputState.value}
+							autoComplete="username"
+						/>
+					</>
+				);
+			default:
+				return (
+					<textarea
+						title={props.title}
+						id={props.id}
+						rows={props.rows || 3}
+						onChange={changeHandler}
+						onBlur={touchHandler}
+						value={inputState.value}
+					/>
+				);
+		}
+	};
 
 	return (
 		<div
 			className={`form-control ${
 				!inputState.isValid && inputState.isTouched && "form-control--invalid"
-			}`}
-		>
+			}`}>
 			<label htmlFor={props.id}>{props.label}</label>
-			{element}
+			{element()}
 			{!inputState.isValid && inputState.isTouched && <p>{props.errorText}</p>}
 		</div>
 	);
